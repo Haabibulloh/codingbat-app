@@ -15,4 +15,5 @@ public class CategoryDto {
 
     private String description;
 
+    private Integer languageId;
 }

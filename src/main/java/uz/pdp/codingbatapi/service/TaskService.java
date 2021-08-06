@@ -18,7 +18,7 @@ import java.util.Optional;
 @Service
 public class TaskService {
     @Autowired
-    LanguageRepository languageRepository;
+    CategoryRepository categoryRepository;
     @Autowired
     TaskRepository taskRepository;
 
@@ -43,11 +43,11 @@ public class TaskService {
        task.setSolution(taskDto.getSolution());
        task.setHint(taskDto.getHint());
        task.setHasStar(taskDto.getHasStar());
-        Optional<Language> optionalLanguage = languageRepository.findById(taskDto.getLanguageId());
-        if (!optionalLanguage.isPresent())
-            return new ApiResponse("This Language doesn't exist", false);
-        Language language = optionalLanguage.get();
-        task.setLanguage(language);
+        Optional<Category> optionalCategory = categoryRepository.findById(taskDto.getCategoryId());
+        if (!optionalCategory.isPresent())
+            return new ApiResponse("This Category doesn't exist", false);
+        Category category = optionalCategory.get();
+        task.setCategory(category);
         taskRepository.save(task);
         return new ApiResponse("Task successfully added",true);
     }
@@ -65,11 +65,11 @@ public class TaskService {
         task.setSolution(taskDto.getSolution());
         task.setHint(taskDto.getHint());
         task.setHasStar(taskDto.getHasStar());
-        Optional<Language> optionalLanguage = languageRepository.findById(taskDto.getLanguageId());
-        if (!optionalLanguage.isPresent())
-            return new ApiResponse("This Language doesn't exist", false);
-        Language language = optionalLanguage.get();
-        task.setLanguage(language);
+        Optional<Category> optionalCategory = categoryRepository.findById(taskDto.getCategoryId());
+        if (!optionalCategory.isPresent())
+            return new ApiResponse("This Category doesn't exist", false);
+        Category category = optionalCategory.get();
+        task.setCategory(category);
         taskRepository.save(task);
         return new ApiResponse("Task successfully updated",true);
     }

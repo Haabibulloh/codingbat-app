@@ -18,6 +18,4 @@ public class Language {
     @Column(nullable = false)
     private String name;
 
-    @ManyToMany
-    private List<Category> categories;
 }

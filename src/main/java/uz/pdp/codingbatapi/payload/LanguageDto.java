@@ -14,5 +14,4 @@ public class LanguageDto {
     @NotNull(message = "Name doesn't have to be empty ")
     private String name;
 
-    private List<Integer> categoriesListId;
 }

@@ -29,5 +29,5 @@ public class Task {
     private String hasStar;
 
     @ManyToOne
-    private Language language;
+    private Category category;
 }

@@ -25,5 +25,5 @@ public class TaskDto {
 
     private String hasStar;
 
-    private Integer languageId;
+    private Integer categoryId;
 }
