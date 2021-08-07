@@ -21,7 +21,7 @@ public class Answer {
 
     private String isCorrect;
 
-    @OneToOne
+    @ManyToOne
     private Task task;
 
     @ManyToOne

@@ -22,42 +22,50 @@ public class TaskService {
     @Autowired
     TaskRepository taskRepository;
 
-    public List<Task> getMethod(){
+    public List<Task> getMethod() {
         List<Task> tasks = taskRepository.findAll();
         return tasks;
     }
-    public Task getByIdMethod(Integer id){
+
+    public Task getByIdMethod(Integer id) {
         Optional<Task> optionalTask = taskRepository.findById(id);
         if (!optionalTask.isPresent())
             return new Task();
         return optionalTask.get();
     }
-    public ApiResponse addMethod(TaskDto taskDto){
-        boolean exists = taskRepository.existsByName(taskDto.getName());
-        if (exists)
-            return new ApiResponse("This Task is already exist",false);
-        Task task=new Task();
-       task.setName(taskDto.getName());
-       task.setText(taskDto.getText());
-       task.setMethod(taskDto.getMethod());
-       task.setSolution(taskDto.getSolution());
-       task.setHint(taskDto.getHint());
-       task.setHasStar(taskDto.getHasStar());
+
+    public ApiResponse addMethod(TaskDto taskDto) {
         Optional<Category> optionalCategory = categoryRepository.findById(taskDto.getCategoryId());
         if (!optionalCategory.isPresent())
             return new ApiResponse("This Category doesn't exist", false);
+        boolean exists = taskRepository.existsByNameAndCategory_Id(taskDto.getName(), taskDto.getCategoryId());
+        if (exists)
+            return new ApiResponse("This Task is already exist", false);
+        Task task = new Task();
+        task.setName(taskDto.getName());
+        task.setText(taskDto.getText());
+        task.setMethod(taskDto.getMethod());
+        task.setSolution(taskDto.getSolution());
+        task.setHint(taskDto.getHint());
+        task.setHasStar(taskDto.getHasStar());
+
         Category category = optionalCategory.get();
         task.setCategory(category);
         taskRepository.save(task);
-        return new ApiResponse("Task successfully added",true);
+        return new ApiResponse("Task successfully added", true);
     }
-    public ApiResponse updateMethod(TaskDto taskDto,Integer id){
-        boolean exists = taskRepository.existsByNameAndIdNot(taskDto.getName(), id);
-        if (exists)
-            return new ApiResponse("This Task is already exist",false);
+
+    public ApiResponse updateMethod(TaskDto taskDto, Integer id) {
         Optional<Task> optionalTask = taskRepository.findById(id);
         if (!optionalTask.isPresent())
             return new ApiResponse("This Task doesn't exist", false);
+        Optional<Category> optionalCategory = categoryRepository.findById(taskDto.getCategoryId());
+        if (!optionalCategory.isPresent())
+            return new ApiResponse("This Category doesn't exist", false);
+        boolean exists = taskRepository.existsByNameAndCategory_IdAndIdNot(taskDto.getName(), taskDto.getCategoryId(), id);
+        if (exists)
+            return new ApiResponse("This Task is already exist", false);
+
         Task task = optionalTask.get();
         task.setName(taskDto.getName());
         task.setText(taskDto.getText());
@@ -65,20 +73,19 @@ public class TaskService {
         task.setSolution(taskDto.getSolution());
         task.setHint(taskDto.getHint());
         task.setHasStar(taskDto.getHasStar());
-        Optional<Category> optionalCategory = categoryRepository.findById(taskDto.getCategoryId());
-        if (!optionalCategory.isPresent())
-            return new ApiResponse("This Category doesn't exist", false);
+
         Category category = optionalCategory.get();
         task.setCategory(category);
         taskRepository.save(task);
-        return new ApiResponse("Task successfully updated",true);
+        return new ApiResponse("Task successfully updated", true);
     }
-    public ApiResponse deleteMethod(Integer id){
+
+    public ApiResponse deleteMethod(Integer id) {
         try {
             taskRepository.deleteById(id);
-            return new ApiResponse("Task successfully deleted",true);
-        } catch (Exception e){
-            return new ApiResponse("Error in deleting",false);
+            return new ApiResponse("Task successfully deleted", true);
+        } catch (Exception e) {
+            return new ApiResponse("Error in deleting", false);
         }
     }
 }

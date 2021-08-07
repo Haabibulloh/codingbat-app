@@ -35,12 +35,12 @@ public class CategoryService {
     }
 
     public ApiResponse addMethod(CategoryDto categoryDto) {
-        boolean exists = categoryRepository.existsByName(categoryDto.getName());
-        if (exists)
-            return new ApiResponse("This Category is already exist", false);
         Optional<Language> optionalLanguage = languageRepository.findById(categoryDto.getLanguageId());
         if (!optionalLanguage.isPresent())
-            return new ApiResponse("This Language doesn't exist",false);
+            return new ApiResponse("This Language doesn't exist", false);
+        boolean exists = categoryRepository.existsByNameAndLanguage_Id(categoryDto.getName(), categoryDto.getLanguageId());
+        if (exists)
+            return new ApiResponse("This Category is already exist", false);
         Language language = optionalLanguage.get();
         Category category = new Category();
         category.setName(categoryDto.getName());
@@ -51,15 +51,16 @@ public class CategoryService {
     }
 
     public ApiResponse updateMethod(CategoryDto categoryDto, Integer id) {
-        boolean exists = categoryRepository.existsByNameAndIdNot(categoryDto.getName(), id);
-        if (exists)
-            return new ApiResponse("This Category is already exist", false);
         Optional<Category> optionalCategory = categoryRepository.findById(id);
         if (!optionalCategory.isPresent())
             return new ApiResponse("This Category doesn't exist", false);
         Optional<Language> optionalLanguage = languageRepository.findById(categoryDto.getLanguageId());
         if (!optionalLanguage.isPresent())
-            return new ApiResponse("This Language doesn't exist",false);
+            return new ApiResponse("This Language doesn't exist", false);
+        boolean exists = categoryRepository.existsByNameAndLanguage_IdAndIdNot(categoryDto.getName(),categoryDto.getLanguageId(),id);
+        if (exists)
+            return new ApiResponse("This Category is already exist", false);
+
         Language language = optionalLanguage.get();
         Category category = optionalCategory.get();
         category.setName(categoryDto.getName());

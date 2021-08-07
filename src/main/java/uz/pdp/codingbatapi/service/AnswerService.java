@@ -35,9 +35,6 @@ public class AnswerService {
         return optionalUser.get();
     }
     public ApiResponse addMethod(AnswerDto answerDto){
-        boolean exists = answerRepository.existsByText(answerDto.getText());
-        if (exists)
-            return new ApiResponse("This Answer is already exist",false);
         Answer answer=new Answer();
         answer.setText(answerDto.getText());
         answer.setIsCorrect(answerDto.getText());
@@ -53,9 +50,6 @@ public class AnswerService {
         return new ApiResponse("Answer successfully added",true);
     }
     public ApiResponse updateMethod(AnswerDto answerDto,Integer id){
-        boolean exists = answerRepository.existsByTextAndIdNot(answerDto.getText(), id);
-        if (exists)
-            return new ApiResponse("This Answer is already exist",false);
         Optional<Answer> optionalAnswer = answerRepository.findById(id);
         if (!optionalAnswer.isPresent())
             return new ApiResponse("This Answer doesn't exist", false);
